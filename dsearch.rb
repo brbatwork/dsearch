@@ -22,15 +22,21 @@ file = open("http://www.scrabblefinder.com/ends-with/#{tld}/")
 content = file.read
 words = content.scan(/\/word\/[a-z]+#{tld}/)
 
+puts "Searching #{words.size} possible domains"
 words.each { |x|
   begin
-    domain = x.slice(/[a-z]+#{tld}$/).sub(/#{tld}$/, ".#{tld}")
+    word = x.slice(/[a-z]+#{tld}$/)
+    domain = word.sub(/#{tld}$/, ".#{tld}")
     r = Whois.whois(domain)
-    puts domain if r.available?
+    puts "#{word} --> #{domain}" if r.available?
     sleep(1/2)
   rescue SignalException => e
     STDOUT.flush
+    STDERR.puts "Quitting"
+    STDERR.flush
     exit
   rescue Exception => e
+    STDERR.puts e
+    STDERR.flush
   end
 }
