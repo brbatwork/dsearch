@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'whois'
 require 'open-uri'
 require 'optparse'
@@ -15,13 +16,15 @@ if options[:tld].nil?
   exit
 end
 
-file = open("http://www.scrabblefinder.com/ends-with/#{options[:tld]}/")
+tld = options[:tld]
+
+file = open("http://www.scrabblefinder.com/ends-with/#{tld}/")
 content = file.read
-words = content.scan(/\/word\/[a-z]+#{options[:tld]}/)
+words = content.scan(/\/word\/[a-z]+#{tld}/)
 
 words.each { |x|
   begin
-    domain = x.slice(/[a-z]+#{options[:tld]}$/).sub(/#{options[:tld]}$/, ".#{options[:tld]}")
+    domain = x.slice(/[a-z]+#{tld}$/).sub(/#{tld}$/, ".#{tld}")
     r = Whois.whois(domain)
     puts domain if r.available?
     sleep(1/2)
