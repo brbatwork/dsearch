@@ -36,6 +36,7 @@ words.each { |x|
     STDERR.flush
     exit
   rescue Exception => e
+    STDOUT.flush
     STDERR.puts e
     STDERR.flush
   end
